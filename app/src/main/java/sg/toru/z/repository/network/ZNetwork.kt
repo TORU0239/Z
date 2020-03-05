@@ -8,23 +8,27 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 object ZNetwork {
-    fun okHttpClient(interceptor:HttpLoggingInterceptor): OkHttpClient{
+
+    val okHttpClient = generateOkHttpClient()
+
+    private fun generateOkHttpClient(): OkHttpClient{
         return OkHttpClient()
             .newBuilder()
             .readTimeout(3000, TimeUnit.MILLISECONDS)
             .writeTimeout(3000, TimeUnit.MILLISECONDS)
-            .addInterceptor(interceptor).build()
+            .addInterceptor(generateLoggingInterceptor()).build()
     }
 
-    fun provideLoggingInterceptor() = HttpLoggingInterceptor().apply {
+    private fun generateLoggingInterceptor() = HttpLoggingInterceptor().apply {
         setLevel(HttpLoggingInterceptor.Level.BODY)
     }
 
-    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
+    private fun generateRetrofit(baseUrl:String = "https://www.google.com"): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("https://www.google.com")
+            .baseUrl(baseUrl)
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
+    fun provideNetworkService() = ZNetwork.generateRetrofit().create(ZNetworkService::class.java)
 }
