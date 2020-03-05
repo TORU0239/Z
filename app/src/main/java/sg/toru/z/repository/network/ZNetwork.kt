@@ -5,11 +5,13 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import sg.toru.z.util.Utils
 import java.util.concurrent.TimeUnit
 
 object ZNetwork {
 
-    val okHttpClient = generateOkHttpClient()
+    private val okHttpClient = generateOkHttpClient()
+    val retrofit = generateRetrofit()
 
     private fun generateOkHttpClient(): OkHttpClient{
         return OkHttpClient()
@@ -23,12 +25,12 @@ object ZNetwork {
         setLevel(HttpLoggingInterceptor.Level.BODY)
     }
 
-    private fun generateRetrofit(baseUrl:String = "https://www.google.com"): Retrofit {
+    private fun generateRetrofit(baseUrl:String = Utils.BASEURL): Retrofit {
         return Retrofit.Builder()
             .baseUrl(baseUrl)
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
-    fun provideNetworkService() = ZNetwork.generateRetrofit().create(ZNetworkService::class.java)
+    fun provideNetworkService() = retrofit.create(ZNetworkService::class.java)
 }

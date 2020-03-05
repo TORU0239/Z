@@ -17,4 +17,8 @@ object Utils {
     /* INFORMATION OF DEFAULT LOCATION WHEN USER IS NOT IN SINGAPORE */
     const val MARINA_BAY_SANDS_LAT = 1.282302
     const val MARINA_BAY_SANDS_LNG = 103.858528
+
+    /* Network Constants */
+    const val BASEURL = "https://api.data.gov.sg/v1/transport/"
+    const val URLFORIMAGE = "traffic-images"
 }
