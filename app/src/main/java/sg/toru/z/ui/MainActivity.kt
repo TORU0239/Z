@@ -38,13 +38,6 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), OnMapReadyCallba
         map.setLatLngBoundsForCameraTarget(LatLngBounds(LatLng(Utils.SOUTHMOST_LAT, Utils.WESTMOST_LNG), LatLng(Utils.NORTHMOST_LAT, Utils.EASTMOST_LNG)))
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(Utils.MARINA_BAY_SANDS_LAT, Utils.MARINA_BAY_SANDS_LNG),11F))
 
-
-        val sydney = LatLng(Utils.MARINA_BAY_SANDS_LAT, Utils.MARINA_BAY_SANDS_LNG)
-        googleMap.addMarker(
-            MarkerOptions().position(sydney)
-                .title("Marker in Sands")
-        )
-
         initializeData()
     }
 
@@ -72,5 +65,6 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), OnMapReadyCallba
             val marker = map.addMarker(options)
             marker.tag = eachItem
         }
+        map.setInfoWindowAdapter(MarkerInfoWindowAdapter(this))
     }
 }
