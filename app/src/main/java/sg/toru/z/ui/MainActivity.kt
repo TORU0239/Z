@@ -1,5 +1,6 @@
 package sg.toru.z.ui
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -38,6 +39,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), OnMapReadyCallba
         super.onCreate(savedInstanceState)
         containerCamera = findViewById(R.id.containerTrafficCamera)
         imgTrafficCamera = findViewById(R.id.imgTrafficCamera)
+        initializeUi()
         initializeMap()
     }
 
@@ -58,8 +60,9 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), OnMapReadyCallba
         mapFragment.getMapAsync(this)
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun initializeUi() {
-        containerCamera.setOnTouchListener { v, event ->
+        imgTrafficCamera.setOnTouchListener { _, _ ->
             true
         }
     }
