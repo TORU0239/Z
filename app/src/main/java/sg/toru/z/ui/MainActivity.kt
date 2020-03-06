@@ -2,7 +2,12 @@ package sg.toru.z.ui
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.ImageView
+import android.widget.LinearLayout
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -13,6 +18,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.MarkerOptions
 import sg.toru.z.R
+import sg.toru.z.glide.GlideApp
 import sg.toru.z.repository.model.CameraInfo
 import sg.toru.z.util.Utils
 import sg.toru.z.viewmodel.MainViewModel
@@ -24,8 +30,14 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), OnMapReadyCallba
         ViewModelProvider.NewInstanceFactory().create(MainViewModel::class.java)
     }
 
+    private lateinit var containerCamera: ConstraintLayout
+    private lateinit var imgTrafficCamera: ImageView
+    private var isCameraShown = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        containerCamera = findViewById(R.id.containerTrafficCamera)
+        imgTrafficCamera = findViewById(R.id.imgTrafficCamera)
         initializeMap()
     }
 
@@ -44,6 +56,12 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), OnMapReadyCallba
     private fun initializeMap(){
         val mapFragment = supportFragmentManager.findFragmentById(R.id.mapFragment) as SupportMapFragment
         mapFragment.getMapAsync(this)
+    }
+
+    private fun initializeUi() {
+        containerCamera.setOnTouchListener { v, event ->
+            true
+        }
     }
 
     private fun initializeData() {
@@ -65,6 +83,31 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), OnMapReadyCallba
             val marker = map.addMarker(options)
             marker.tag = eachItem
         }
-        map.setInfoWindowAdapter(MarkerInfoWindowAdapter(this))
+
+        map.setOnMarkerClickListener {
+            val info = it.tag as CameraInfo
+            map.moveCamera(CameraUpdateFactory.newLatLng(LatLng(info.location.latitude, info.location.longitude)))
+            it.showInfoWindow()
+
+            if(!isCameraShown) {
+                isCameraShown = true
+                containerCamera.visibility = View.VISIBLE
+            }
+            GlideApp.with(imgTrafficCamera)
+                .load(info.image)
+                .error(R.mipmap.ic_launcher)
+                .into(imgTrafficCamera)
+
+            true
+        }
+    }
+
+    override fun onBackPressed() {
+        if(isCameraShown) {
+            containerCamera.visibility = View.GONE
+            isCameraShown = false
+        } else {
+            super.onBackPressed()
+        }
     }
 }
