@@ -1,7 +1,6 @@
 package sg.toru.z.repository.model
 
-sealed class Output<out T:Any> { // out means we are only allowed to read the value.
-    data class Success<out T:Any>(val output:T):Output<T>()
-    data class Failure(val failureMsg:String):Output<Nothing>()
-    data class Exceptional(val exception:java.lang.Exception):Output<Nothing>()
+sealed class ApiResponse<T> {
+    class ApiSuccess<T>(val body:T):ApiResponse<T>()
+    class ApiFailure<T>(val errorMessage: String):ApiResponse<T>()
 }

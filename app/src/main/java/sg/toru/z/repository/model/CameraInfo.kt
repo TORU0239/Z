@@ -1,5 +1,8 @@
 package sg.toru.z.repository.model
 
+data class CameraInformation(
+    val items:List<CameraInfoItems>
+)
 data class CameraInfoItems(
     val timeStamp: String,
     val cameras: List<CameraInfo>
