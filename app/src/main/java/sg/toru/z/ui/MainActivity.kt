@@ -5,8 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
-import android.widget.LinearLayout
-import androidx.appcompat.app.AlertDialog
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.Observer
@@ -73,7 +72,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), OnMapReadyCallba
         })
 
         viewModel.exceptionalLiveData.observe(this, Observer {
-
+            Toast.makeText(this@MainActivity, "Error occured while loading data.", Toast.LENGTH_SHORT).show()
         })
     }
 
